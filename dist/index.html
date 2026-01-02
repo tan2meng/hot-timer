@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="https://fav.farm/🥘" />
+    <link rel="manifest" href="./assets/manifest-DKv0hAHq.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#1c1917" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>火锅闹钟 v2.5</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"LXGW WenKai TC"', 'cursive', 'sans-serif'],
+            },
+            colors: {
+              pot: {
+                red: '#ef4444',
+                darkred: '#991b1b',
+                yellow: '#fef08a',
+                cream: '#fffbeb',
+                dark: '#1c1917',
+              }
+            },
+            animation: {
+              'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'float': 'floatUp 3s infinite ease-in-out',
+              'fade-in': 'fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+              'scale-up': 'scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+              'hint-float': 'hintFloat 1.6s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards',
+              'scan-line': 'scanLine 2s linear infinite',
+              'steam': 'steam 4s infinite linear',
+              'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'slide-down': 'slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'fade-out': 'fadeOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards',
+              'slide-in-right': 'slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'slide-out-left': 'slideOutLeft 0.3s cubic-bezier(0.4, 0, 1, 1) forwards',
+              'done-alert': 'doneAlert 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+            },
+            keyframes: {
+              scanLine: {
+                '0%': { top: '0%' },
+                '100%': { top: '100%' }
+              },
+              fadeIn: {
+                from: { opacity: '0' },
+                to: { opacity: '1' }
+              },
+              fadeOut: {
+                from: { opacity: '1' },
+                to: { opacity: '0' }
+              },
+              scaleUp: {
+                from: { transform: 'scale(0.9) translateY(10px)', opacity: '0' },
+                to: { transform: 'scale(1) translateY(0)', opacity: '1' }
+              },
+              slideUp: {
+                from: { transform: 'translateY(100%)', opacity: '0' },
+                to: { transform: 'translateY(0)', opacity: '1' }
+              },
+              slideDown: {
+                from: { transform: 'translateY(-100%)', opacity: '0' },
+                to: { transform: 'translateY(0)', opacity: '1' }
+              },
+              slideInRight: {
+                from: { transform: 'translateX(100%)', opacity: '0' },
+                to: { transform: 'translateX(0)', opacity: '1' }
+              },
+              slideOutLeft: {
+                from: { transform: 'translateX(0)', opacity: '1' },
+                to: { transform: 'translateX(-100%)', opacity: '0' }
+              },
+              floatUp: {
+                '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                '50%': { transform: 'translateY(-10px) rotate(5deg)' }
+              },
+              hintFloat: {
+                '0%': { transform: 'translateY(0) scale(0.8)', opacity: '0' },
+                '10%': { transform: 'translateY(-8px) scale(1)', opacity: '1' },
+                '80%': { transform: 'translateY(-8px) scale(1)', opacity: '1' },
+                '100%': { transform: 'translateY(-8px) scale(0.9)', opacity: '0' }
+              },
+              steam: {
+                '0%': { transform: 'translateY(0) scale(1)', opacity: '0' },
+                '20%': { opacity: '0.6' },
+                '100%': { transform: 'translateY(-100px) scale(2)', opacity: '0' }
+              },
+              doneAlert: {
+                '0%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.15)' },
+                '100%': { transform: 'scale(0.85)' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      * {
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        -webkit-touch-callout: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+        overscroll-behavior: none;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #1c1917; /* Stone 900 */
+        touch-action: manipulation;
+        min-height: 100vh;
+      }
+      #root { position: relative; z-index: 1; height: 100vh; }
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      .pt-safe { padding-top: max(env(safe-area-inset-top), 1.5rem); }
+      .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 1.5rem); }
+    </style>
+
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+  }
+}
+</script>
+  <script type="module" crossorigin src="./assets/index-i9JJOtpK.js"></script>
+</head>
+  <body>
+    <div id="root"></div>
+</body>
+</html>
+
