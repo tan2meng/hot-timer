@@ -116,19 +116,37 @@
         -webkit-tap-highlight-color: transparent !important;
         overscroll-behavior: none;
       }
+      html {
+        height: 100%;
+        overflow: hidden;
+      }
       body {
         margin: 0;
         overflow: hidden;
         background-color: #1c1917; /* Stone 900 */
         touch-action: manipulation;
-        min-height: 100vh;
+        height: 100%;
+        position: fixed;
+        width: 100%;
       }
-      #root { position: relative; z-index: 1; height: 100vh; }
+      #root { 
+        position: relative; 
+        z-index: 1; 
+        height: 100dvh;
+        width: 100%;
+      }
       .hide-scrollbar::-webkit-scrollbar { display: none; }
       .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-      .pt-safe { padding-top: max(env(safe-area-inset-top), 1.5rem); }
-      .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 1.5rem); }
+      .pt-safe { padding-top: max(env(safe-area-inset-top), 0.75rem); }
+      .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 0.75rem); }
+      
+      /* 确保移动端视口高度正确 */
+      @supports (height: 100dvh) {
+        body, html, #root {
+          height: 100dvh;
+        }
+      }
     </style>
 <script type="importmap">
 {

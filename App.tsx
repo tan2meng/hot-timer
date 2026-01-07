@@ -330,7 +330,7 @@ const App: React.FC = () => {
   const isGridMode = sortedCookingItems.length >= 3;
 
   return (
-    <div className="h-screen w-full flex flex-col relative text-stone-900 bg-stone-900 overflow-hidden">
+    <div className="h-[100dvh] w-full flex flex-col relative text-stone-900 bg-stone-900 overflow-hidden">
       
       {/* Dynamic Pot Background */}
       <PotBackground />
@@ -400,8 +400,8 @@ const App: React.FC = () => {
         </main>
 
         {/* Bottom Sheet - The "Plate" (Prep Area) */}
-        {/* 使用 flex-1 确保待煮区始终延伸到屏幕底部，实现底边完全重叠 */}
-        <section className="flex flex-col z-20 flex-1 min-h-0">
+        {/* 固定高度的待煮区，确保加菜按钮始终可见 */}
+        <section className="flex flex-col z-20 shrink-0" style={{ maxHeight: '40vh' }}>
           <div className="flex flex-col w-full h-full bg-[#fdfaf6] rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] border-t-4 border-white relative overflow-hidden">
               
               {/* Plate Texture */}
@@ -410,14 +410,14 @@ const App: React.FC = () => {
 
               {/* Prep Items Area - Grid Layout with Vertical Scroll */}
               {/* 使用 flex-1 和 min-h-0 确保内容区可以滚动，加菜按钮始终在底部 */}
-              <div className="overflow-y-auto hide-scrollbar p-6 pb-2 flex-1 min-h-0 relative z-10">
+              <div className="overflow-y-auto hide-scrollbar p-4 pb-2 flex-1 min-h-0 relative z-10">
                   {state.prepItems.length === 0 ? (
-                      <div className="w-full h-24 flex flex-col items-center justify-center text-stone-400 space-y-2">
-                          <span className="text-4xl opacity-50">🍽️</span>
-                          <span className="text-sm font-medium">盘子空空的，去点菜吧</span>
+                      <div className="w-full h-20 flex flex-col items-center justify-center text-stone-400 space-y-1">
+                          <span className="text-3xl opacity-50">🍽️</span>
+                          <span className="text-xs font-medium">盘子空空的，去点菜吧</span>
                       </div>
                   ) : (
-                      <div className="grid grid-cols-4 sm:grid-cols-5 gap-3 pb-2">
+                      <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 pb-2">
                           {state.prepItems.map((item: PrepItem) => {
                               const ing = state.ingredients.find((i: Ingredient) => i.id === item.ingredientId);
                               if (!ing) return null;
@@ -448,12 +448,12 @@ const App: React.FC = () => {
               </div>
 
               {/* Add Button Area - Fixed at bottom with consistent spacing from prep area bottom */}
-              <div className="px-6 pb-safe pt-2 relative z-10 shrink-0">
+              <div className="px-4 pb-safe pt-2 relative z-10 shrink-0">
                    <button 
                       onClick={() => setLibraryOpen(true)}
-                      className="w-full py-4 bg-stone-900 hover:bg-stone-800 active:bg-stone-700 text-white rounded-2xl flex items-center justify-center gap-2 font-bold tracking-widest text-lg transition-all shadow-xl active:scale-[0.98]"
+                      className="w-full py-3 bg-stone-900 hover:bg-stone-800 active:bg-stone-700 text-white rounded-2xl flex items-center justify-center gap-2 font-bold tracking-widest text-base transition-all shadow-xl active:scale-[0.98]"
                   >
-                      <Plus size={24} strokeWidth={3} />
+                      <Plus size={22} strokeWidth={3} />
                       <span>加 菜</span>
                   </button>
               </div>
