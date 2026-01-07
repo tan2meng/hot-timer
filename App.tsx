@@ -19,7 +19,7 @@ const GuideModal: React.FC<{ onClose: () => void, onOpenScanner: () => void }> =
                 <li className="flex gap-3 items-center group">
                     <span className="text-2xl">📸</span>
                     <div className="flex-1">
-                        <p className="font-bold text-base">第一步：扫码点菜</p>
+                        <p className="font-bold text-base">第一步：扫码</p>
                         <p className="opacity-60 text-xs">扫描二维码，获取店家专属食材库。</p>
                     </div>
                     <button
