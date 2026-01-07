@@ -14,14 +14,30 @@ const TimerItem: React.FC<TimerItemProps> = ({ item, ingredient, onDone, classNa
   const [isAlerting, setIsAlerting] = useState(false);
   const requestRef = useRef<number | undefined>(undefined);
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const hasPlayedSound = useRef(false);
+
+  const initAudioContext = () => {
+    if (!audioCtxRef.current) {
+      try {
+        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      } catch (e) {
+        console.error('Failed to create AudioContext:', e);
+      }
+    }
+    if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+      audioCtxRef.current.resume().catch(e => console.error('Failed to resume AudioContext:', e));
+    }
+  };
 
   const playDing = () => {
     try {
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-      }
+      initAudioContext();
+      if (!audioCtxRef.current) return;
+      
       const ctx = audioCtxRef.current;
-      if (ctx.state === 'suspended') ctx.resume();
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(e => console.error('Failed to resume AudioContext:', e));
+      }
 
       const oscillator = ctx.createOscillator();
       const gainNode = ctx.createGain();
@@ -38,12 +54,21 @@ const TimerItem: React.FC<TimerItemProps> = ({ item, ingredient, onDone, classNa
 
       oscillator.start();
       oscillator.stop(ctx.currentTime + 1.5);
+      
+      hasPlayedSound.current = true;
     } catch (e) {
       console.error("Audio play failed", e);
     }
   };
 
   useEffect(() => {
+    // 在组件挂载时初始化音频上下文
+    initAudioContext();
+  }, []);
+
+  useEffect(() => {
+    hasPlayedSound.current = false;
+    
     const animate = () => {
       const now = Date.now();
       const elapsed = (now - item.startTime) / 1000;
@@ -54,7 +79,9 @@ const TimerItem: React.FC<TimerItemProps> = ({ item, ingredient, onDone, classNa
       if (p >= 1 && !item.isDone) {
         onDone(item.uid);
         setIsAlerting(true);
-        playDing();
+        if (!hasPlayedSound.current) {
+          playDing();
+        }
       } else if (p < 1) {
         requestRef.current = requestAnimationFrame(animate);
       }
